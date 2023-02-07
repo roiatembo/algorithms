@@ -1,32 +1,38 @@
+import math
+
 def int_to_roman(num):
     roman_dict = {1:"I", 5:"V", 10:"X", 50:"L", 100:"C", 500:"D", 1000: "M"}
+    types = [1000, 100, 10, 1]
+    types_dict = {1000: 0, 100: 0, 10: 0, 1: 0}
+    exceptions = {900: "CM", 400: "CD", 90: "XC", 40:"XL", 9: "IX", 4: "IV"}
     str_list = []
 
-    while num !=0:
-        if num >= 1000:
-            str_list.append(roman_dict[1000])
-            num -= 1000
-        elif num >= 500:
-            str_list.append(roman_dict[500])
-            num -= 500
-        elif num   >= 100:
-            str_list.append(roman_dict[100])
-            num -= 100
-        elif num >= 50:
-            str_list.append(roman_dict[50])
-            num -= 50
-        elif num >= 10:
-            str_list.append(roman_dict[10])
-            num -= 10
-        elif num >= 5:
-            str_list.append(roman_dict[5])
-            num -= 5
-        elif num >= 1:
-            str_list.append(roman_dict[1])
-            num -= 1
+    for t in types:
+        count = math.floor(num / t)
+        types_dict[t] = types_dict[t] + count
+        num -= count * t
 
-    
+    for types in types_dict:
+        if types_dict[types] > 0:
+            current = types_dict[types] * types
+            while current != 0:
+                half = (types/2) * 10
+                if current not in exceptions:
+                    if half <= current:
+                        try:
+                            str_list.append(roman_dict[half])
+                            current -= half
+                        except KeyError:
+                            pass
+                    else:
+                        str_list.append(roman_dict[types])
+                        current -= types
+                else:
+                    str_list.append(exceptions[current])
+                    current -= current
+
     return ''.join(str_list)
+
 
 while True:
     digit = int(input("Enter num: "))
